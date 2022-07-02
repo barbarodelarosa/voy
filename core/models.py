@@ -28,6 +28,10 @@ class Mensajero(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="ID único para el mensajero")
     direcciones=models.ManyToManyField(Direccion, blank=True, help_text="Direcciones del mensajero")
     codigo = models.CharField(max_length=10, blank=True, unique=True)
+    paquete_recogido=models.BooleanField(default=False)
+    paquete_recogido_hora=models.DateTimeField(blank=True, null=True)
+    paquete_entregado=models.BooleanField(default=False)
+    paquete_entregado_hora=models.DateTimeField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
 	    if self.codigo=="":
@@ -53,6 +57,10 @@ class Paquete(models.Model):
     mensajero = models.ForeignKey(Mensajero, on_delete=models.CASCADE)
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="ID único para el vehiculo del mensajero")
     codigo = models.CharField(max_length=10, blank=True, unique=True)
+    paquete_recogido=models.BooleanField(default=False)
+    paquete_recogido_hora=models.DateTimeField(blank=True, null=True)
+    paquete_entregado=models.BooleanField(default=False)
+    paquete_entregado_hora=models.DateTimeField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
 	    if self.codigo=="":
@@ -64,11 +72,21 @@ class Paquete(models.Model):
 
 
 class ServicioMensajero(models.Model):
+    ESTADO_SERVICIO_CHOICE=(
+        ('PENDIENTE_DE_MENSAJERO','PENDIENTE_DE_MENSAJERO'),
+        ('PENDIENTE_DE_ACEPTACION','PENDIENTE_DE_ACEPTACION'),
+        ('ENVIANDO','ENVIANDO'),
+        ('FINALIZADO','FINALIZADO'),
+
+    )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, help_text="ID único para el vehiculo del mensajero")
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     paquete = models.ForeignKey(Paquete, on_delete=models.CASCADE)
     mensajero = models.ForeignKey(Mensajero, on_delete=models.CASCADE, blank=True, null=True)
+    mensajero_aceptado=models.BooleanField(default=False)
+    rechazo_mensajero = models.ManyToManyField(Mensajero, related_name="rechazo_mensajero", blank=True)
+    mensajero_rechazado = models.ManyToManyField(Mensajero, related_name="mensajero_rechazado", blank=True)
     vahiculo = models.ForeignKey(VehiculoMensajero, on_delete=models.CASCADE, blank=True, null=True)
     direccion_origen=models.CharField(max_length=125, blank=True, null=True)
     direccion_destino=models.CharField(max_length=125, blank=True, null=True)
@@ -87,8 +105,10 @@ class ServicioMensajero(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
     # PPONER EN UN ESTADO CUANDO SE CREA, EJEMPLO: EN ESPERA, ENVIANDO, TERMINADO
-    estado=models.CharField(max_length=25, blank=True, null=True)
+    estado=models.CharField(max_length=25, choices=ESTADO_SERVICIO_CHOICE, blank=True, null=True)
     codigo = models.CharField(max_length=10, blank=True, unique=True)
+    paquete_recogido=models.BooleanField(default=False)
+    paquete_recogido_hora=models.DateTimeField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
 	    if self.codigo=="":

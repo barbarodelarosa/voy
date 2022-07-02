@@ -13,19 +13,27 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from core.views import CrearPaqueteView, CrearServicioMensajeriaView, HomeClienteView, HomeView, ListaPaquetesView, ListaServicioMensajeroView, SeguimientoView
+from core import views
 from django.urls import path
 
 
 app_name = 'core'
 
 urlpatterns = [
-    path('', HomeView.as_view(), name="home"),
-    path('cliente/', HomeClienteView.as_view(), name="home-cliente"),
-    path('cliente/crear-mensajeria/', CrearServicioMensajeriaView.as_view(), name="crear-mensajeria"),
-    path('cliente/crear-paquete/', CrearPaqueteView.as_view(), name="crear-paquete"),
-    path('cliente/lista-de-paquetes/', ListaPaquetesView.as_view(), name="lista-paquetes"),
-    path('cliente/seguimiento/', SeguimientoView.as_view(), name="seguimiento"),
-    path('cliente/lista-servicio-mensajeria/', ListaServicioMensajeroView.as_view(), name="lista-servicio-mensajeria"),
+    path('', views.HomeView.as_view(), name="home"),
+    path('cliente/', views.HomeClienteView.as_view(), name="home-cliente"),
+    path('cliente/crear-mensajeria/', views.CrearServicioMensajeriaView.as_view(), name="crear-mensajeria"),
+    path('cliente/crear-paquete/', views.CrearPaqueteView.as_view(), name="crear-paquete"),
+    path('cliente/lista-de-paquetes/', views.ListaPaquetesView.as_view(), name="lista-paquetes"),
+    path('cliente/seguimiento/', views.SeguimientoView.as_view(), name="seguimiento"),
+    path('cliente/lista-servicio-mensajeria/', views.ListaServicioMensajeroView.as_view(), name="lista-servicio-mensajeria"),
+    path('cliente/aceptar-mensajero/<pk>/<pk_mensajero>/', views.aceptar_mensajero, name="aceptar-mensajero"),
+    path('cliente/rechazar-mensajero/<pk>/<pk_mensajero>/', views.rechazar_mensajero, name="rechazar-mensajero"),
+
+    path('mensajero/', views.HomeMensajeroView.as_view(), name="home-mensajero"),
+    path('mensajero/mensajero-aceptar-servicio/<pk>/', views.mensajero_aceptar_servicio, name="mensajero-aceptar-servicio"),
+    path('mensajero/rechazar-aceptar-servicio/<pk>/', views.rechazar_aceptar_servicio, name="rechazar-aceptar-servicio"),
+    # path('mensajero/rechazar-mensajero/<pk>/<pk_mensajero>', views.rechazar_mensajero, name="rechazar-mensajero"),
+
 ]
 

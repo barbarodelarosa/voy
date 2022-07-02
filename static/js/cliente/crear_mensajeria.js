@@ -18,6 +18,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
 }, function(err) {
     console.error(err);
     //AUI SI DA ERROR ES PORQUE NO SE HA ENCONTRADO POSICIAN Y DEBE SOLICARLE UN POSICIAN AL USUARIO
+    alert('No es se encuantra su localización, por favor active su GPS');
 });
 
 

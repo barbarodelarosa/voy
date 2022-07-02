@@ -1,6 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from core.forms import ServicioMensajeroForm
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import generic
 from .models import Mensajero, Paquete, ServicioMensajero
@@ -42,3 +42,72 @@ class SeguimientoView(generic.TemplateView):
 class ListaServicioMensajeroView(generic.ListView):
     model=ServicioMensajero
     template_name="cliente/lista_servicio_mensajeria.html"
+
+
+class HomeMensajeroView(generic.View):
+    template_name="mensajero/index_mensajero.html"
+
+    def get(self, request, *args, **kwargs):
+        # servicios=ServicioMensajero.objects.filter(user=self.request.user,activo=True)
+        servicios=ServicioMensajero.objects.filter(activo=True)
+        return render(request, self.template_name, {'servicios':servicios}) 
+
+def mensajero_aceptar_servicio(request, pk):
+    servicio = ServicioMensajero.objects.get(pk=pk)
+    mensajero = request.user.mensajero
+    print(servicio.mensajero)
+    if not servicio.mensajero:
+        servicio.mensajero = mensajero
+        servicio.save()
+    else:
+        print("Ya existe un mensajero")
+    
+    # agregar logica para cambiar el estado del pedido que no es confirmado hasta que no esprobado por el creador
+    url_actual= request.META.get('HTTP_REFERER', None) or '/'
+    return redirect(url_actual)
+
+def rechazar_aceptar_servicio(request, pk):
+    servicio = ServicioMensajero.objects.get(pk=pk)
+    mensajero = request.user.mensajero
+    if not servicio.rechazo_mensajero.contains(mensajero):
+        servicio.rechazo_mensajero.add(mensajero)
+        servicio.save()
+        print("Mensajero agregado")
+    else:
+        servicio.rechazo_mensajero.remove(mensajero)
+        servicio.save()
+        print("Mensajero removido")
+    
+    # agregar logica para cambiar el estado del pedido que no es confirmado hasta que no esprobado por el creador
+    url_actual= request.META.get('HTTP_REFERER', None) or '/'
+    return redirect(url_actual)
+
+def aceptar_mensajero(request, pk, pk_mensajero):
+    servicio = ServicioMensajero.objects.get(pk=pk)
+    mensajero = Mensajero.objects.get(pk=pk_mensajero)
+  
+    print(servicio.mensajero)    
+    if servicio.mensajero == mensajero:
+        servicio.mensajero_aceptado=True
+        servicio.estado = 'ENVIANDO'
+        servicio.save()        
+    else:
+        print("No existem mensajero asignado")
+    # agregar logica para cambiar el estado del pedido que no es confirmado hasta que no esprobado por el creador
+    url_actual= request.META.get('HTTP_REFERER', None) or '/'
+    return redirect(url_actual)
+
+def rechazar_mensajero(request, pk, pk_mensajero):
+    servicio = ServicioMensajero.objects.get(pk=pk)
+    mensajero = Mensajero.objects.get(pk=pk_mensajero)
+        
+    if servicio.mensajero == mensajero:
+        servicio.mensajero = None
+        servicio.mensajero_rechazado.add(mensajero)
+        servicio.estado = 'PENDIENTE_DE_MENSAJERO'
+        servicio.save()        
+    else:
+        print("No existem mensajero asignado")
+    # agregar logica para cambiar el estado del pedido que no es confirmado hasta que no esprobado por el creador
+    url_actual= request.META.get('HTTP_REFERER', None) or '/'
+    return redirect(url_actual)
