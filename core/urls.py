@@ -29,10 +29,17 @@ urlpatterns = [
     path('cliente/lista-servicio-mensajeria/', views.ListaServicioMensajeroView.as_view(), name="lista-servicio-mensajeria"),
     path('cliente/aceptar-mensajero/<pk>/<pk_mensajero>/', views.aceptar_mensajero, name="aceptar-mensajero"),
     path('cliente/rechazar-mensajero/<pk>/<pk_mensajero>/', views.rechazar_mensajero, name="rechazar-mensajero"),
+    path('cliente/detalles-mensajero/<pk>/', views.DetallesMensajeroView.as_view(), name="detalles-mensajero"),
+    path('cliente/seguimiento-mensajero/<pk>/', views.SeguimientoMensajeroView.as_view(), name="seguimiento-mensajero"),
+
+    path('detalles-servicio-mensajero/<pk>/', views.DetallesServicioMensajeroView.as_view(), name="detalles-servicio-mensajero"),
+    path('servicio-paquete-entregado-recibido/<pk_servicio>/<enviado_por>/', views.recogida_entrega_paquete, name="servicio-paquete-entregado-recibido"),
 
     path('mensajero/', views.HomeMensajeroView.as_view(), name="home-mensajero"),
     path('mensajero/mensajero-aceptar-servicio/<pk>/', views.mensajero_aceptar_servicio, name="mensajero-aceptar-servicio"),
     path('mensajero/rechazar-aceptar-servicio/<pk>/', views.rechazar_aceptar_servicio, name="rechazar-aceptar-servicio"),
+    path('mensajero/detalles-cliente/<pk>/', views.DetallesClienteView.as_view(), name="detalles-cliente"),
+    path('mensajero/detalles-paquete/<pk>/', views.DetallesPaqueteView.as_view(), name="detalles-paquete"),
     # path('mensajero/rechazar-mensajero/<pk>/<pk_mensajero>', views.rechazar_mensajero, name="rechazar-mensajero"),
 
 ]

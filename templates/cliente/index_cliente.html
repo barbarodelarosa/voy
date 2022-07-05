@@ -37,13 +37,18 @@
               </div>
               <div class="card-body">
                 <h5 class="card-title">Special title treatment</h5>
+         
+
                 <div class="d-flex align-items-start">
                   <p class="card-text"><strong>Paquete: </strong></p><p class="card-text">COD-{{servicio.paquete.id}}</p>
                 </div>
                 <div class="d-flex align-items-start">
                     <p class="card-text"><strong> Mensajero: </strong></p><p class="card-text">
                       {% if servicio.mensajero %}
-                        {{servicio.mensajero.user.username}}
+                        <a href="{% url 'core:detalles-mensajero' servicio.mensajero.pk %}">
+                          {{servicio.mensajero.user.username}}
+                        </a>
+                        
                             <i class="bi bi-star-fill estrellas"></i>
                             <i class="bi bi-star-fill estrellas"></i>
                             <i class="bi bi-star-fill estrellas"></i>
@@ -81,11 +86,13 @@
                       {% endif %}
                     </p>
                   </div>
-                <a href="{% url 'core:seguimiento' %}" class="btn btn-primary">Hacer seguimiento</a>
-                <a href="#" class="btn btn-primary">Ver pedido</a>
-                {% if sercicio.entregar_paquete == false %}
+                  {% if servicio.mensajero %}
+                    <a href="{% url 'core:seguimiento-mensajero' servicio.mensajero.pk %}" class="btn btn-primary">Hacer seguimiento</a>
+                  {% endif %}
+                <a href="{% url 'core:detalles-servicio-mensajero' servicio.pk %}" class="btn btn-primary">Ver pedido</a>
+                {% if not servicio.paquete_entregado %}
                   {% if servicio.mensajero_aceptado %}
-                    <a href="#" class="btn btn-success">Entregar paquete</a>
+                    <a href="{% url 'core:servicio-paquete-entregado-recibido' servicio.pk 'cliente' %}" class="btn btn-success">Entregar paquete</a>
                   {% else %}
                     <a href="#" class="btn btn-success disabled">Entregar paquete</a>
                   {% endif %}
@@ -93,6 +100,7 @@
                   <a href="#" class="btn btn-success disabled">Paquete entregado</a>
                 {% endif %}
               </div>
+
               <div class="card-footer text-muted">
                   <span class="badge text-bg-success">{{servicio.estado}}</span>
               </div>

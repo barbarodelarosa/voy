@@ -1,9 +1,11 @@
+from datetime import datetime
+from django import views
 from django.http import HttpResponse, HttpResponseRedirect
 from core.forms import ServicioMensajeroForm
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import generic
-from .models import Mensajero, Paquete, ServicioMensajero
+from .models import Cliente, Mensajero, Paquete, ServicioMensajero
 # Create your views here.
 class HomeView(generic.TemplateView):
     template_name="index.html"
@@ -111,3 +113,43 @@ def rechazar_mensajero(request, pk, pk_mensajero):
     # agregar logica para cambiar el estado del pedido que no es confirmado hasta que no esprobado por el creador
     url_actual= request.META.get('HTTP_REFERER', None) or '/'
     return redirect(url_actual)
+
+class DetallesMensajeroView(generic.DetailView):
+    model=Mensajero
+    template_name="cliente/detalles_de_mensajero.html"
+
+class DetallesServicioMensajeroView(generic.DetailView):
+    model=ServicioMensajero
+    template_name="cliente/detalles_de_servicio_mensajero.html"
+
+class SeguimientoMensajeroView(generic.DetailView):
+    model=Mensajero
+    template_name="cliente/seguimiento_mensajero.html"
+
+
+
+
+
+class DetallesClienteView(generic.DetailView):
+    model=Cliente
+    template_name="mensajero/detalles_de_cliente.html"
+
+class DetallesPaqueteView(generic.DetailView):
+    model=Paquete
+    template_name="mensajero/detalles_de_paquete.html"
+
+
+def recogida_entrega_paquete(request, pk_servicio, enviado_por):
+    url_actual= request.META.get('HTTP_REFERER', None) or '/'
+    servicio=ServicioMensajero.objects.get(pk=pk_servicio)
+    # enviar parametro de quien hizo la solicitud si el cliente o el mensajero
+    if enviado_por == 'cliente' and servicio.paquete_entregado==False:
+        servicio.paquete_entregado=True
+        servicio.paquete_entregado_hora=datetime.now()
+        servicio.save()
+    if enviado_por == 'mensajero' and servicio.paquete_entregado==True:
+        servicio.paquete_recibido=True
+        servicio.paquete_recibido_hora=datetime.now()
+        servicio.save()
+    return redirect(url_actual)
+

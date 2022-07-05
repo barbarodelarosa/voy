@@ -107,8 +107,11 @@ class ServicioMensajero(models.Model):
     # PPONER EN UN ESTADO CUANDO SE CREA, EJEMPLO: EN ESPERA, ENVIANDO, TERMINADO
     estado=models.CharField(max_length=25, choices=ESTADO_SERVICIO_CHOICE, blank=True, null=True)
     codigo = models.CharField(max_length=10, blank=True, unique=True)
-    paquete_recogido=models.BooleanField(default=False)
-    paquete_recogido_hora=models.DateTimeField(blank=True, null=True)
+    paquete_entregado=models.BooleanField(default=False)
+    paquete_entregado_hora=models.DateTimeField(blank=True, null=True)
+    paquete_recibido=models.BooleanField(default=False)
+    paquete_recibido_hora=models.DateTimeField(blank=True, null=True)
+    servicio_finalizado=models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
 	    if self.codigo=="":

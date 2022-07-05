@@ -34,12 +34,18 @@
                         <div class="col-sm-6">
 
                           <div class="d-flex align-items-start">
-                            <p class="card-text"><strong>Paquete: </strong></p><p class="card-text">Volumen del paquete</p>
+                            <p class="card-text"><strong>Paquete: </strong></p><p class="card-text">
+                              <a href="{% url 'core:detalles-paquete' servicio.paquete.pk %}">
+                                Volumen del paquete
+                              </a>
+                            </p>
                           </div>
 
                           <div class="d-flex align-items-start">
                             <p class="card-text"><strong> Cliente: </strong></p><p class="card-text">
-                              {{servicio.user.username}}
+                              <a href="{% url 'core:detalles-cliente' servicio.cliente.pk %}">
+                                {{servicio.user.username}}
+                              </a>
                               <i class="bi bi-star-fill estrellas"></i>
                               <i class="bi bi-star-fill estrellas"></i>
                               <i class="bi bi-star-fill estrellas"></i>
@@ -103,7 +109,7 @@
                             {%  endif%}
                           {%endif%}
                       {% endif %}
-                      <a href="#" class="btn btn-primary">Detalles</a>
+                      <a href="{% url 'core:detalles-servicio-mensajero' servicio.pk %}" class="btn btn-primary">Detalles</a>
                       {% if servicio.mensajero %}
                         
                           {% if request.user.mensajero in servicio.rechazo_mensajero.all %}
@@ -132,6 +138,23 @@
                         {% endif %}
 
                       {% endif %}
+
+                      {% if servicio.paquete_entregado %}
+                        
+                        {% if not servicio.paquete_recibido %}
+                          {% if servicio.mensajero_aceptado %}
+                            <a href="{% url 'core:servicio-paquete-entregado-recibido' servicio.pk 'mensajero' %}" class="btn btn-success">Recibir paquete</a>
+                          {% else %}
+                            <a href="#" class="btn btn-success disabled">Recibir paquete</a>
+                          {% endif %}
+                        {% else %}
+                            <a href="#" class="btn btn-success disabled">Paquete recibido</a>
+                        {% endif %}
+
+                      {% else %}
+                        
+                      {% endif %}
+
                     </div>
                     <div class="card-footer text-muted">
                         {% if request.user.mensajero in servicio.mensajero_rechazado.all %}

@@ -22,12 +22,29 @@ navigator.geolocation.getCurrentPosition(function(position) {
 });
 
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 18,
-    attribution: '© Voy Express'
-}).addTo(map);
+// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+//     maxZoom: 18,
+//     attribution: '© Voy Express'
+// }).addTo(map);
 
-L.control.scale().addTo(map);
+
+
+
+L.mapbox.accessToken = 'pk.eyJ1IjoiYXJ0ZWNyaW9sbG8iLCJhIjoiY2wzd2gyZHZyMDI1ZjNjbXkzNmduNmdydiJ9.eJ7_JqzaIEHZ4rGFBA0Ung';
+
+var mapboxTiles = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=' + L.mapbox.accessToken, {
+       attribution: '© <a href="https://www.mapbox.com/feedback/">Mapbox</a> © <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+       tileSize: 512,
+       zoomOffset: -1
+    });
+
+// var map = L.map('map')
+map.addLayer(mapboxTiles)
+.setView([browserLat, browserLong], 15);
+
+// L.control.scale().addTo(map);
+
+
 
 
 // /*****************OBTENER DISTANCIA DEL RECORRIDO********** */

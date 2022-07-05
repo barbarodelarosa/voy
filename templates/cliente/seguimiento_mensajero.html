@@ -16,13 +16,13 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />-->
     
     
-    <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+    {% comment %} <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' /> {% endcomment %}
 
 
 
 
 
-    <link rel="stylesheet" href="{% static 'css/cliente/crear_mensajeria.css'%}" /> 
+    {% comment %} <link rel="stylesheet" href="{% static 'css/cliente/crear_mensajeria.css'%}" />  {% endcomment %}
 
    
 {% endblock head %}
@@ -37,21 +37,12 @@
     <div class="container" style="margin-top: 100px;">
 
         <div class="row">
+        mostrar mapa con la informacion de localizacion del mensajero
+        Seguimiento a mensajero
 
-            <form action="" method="post">{% csrf_token %}
-               
-                {{form|crispy}}
-                <button type="submit">Crear paquete</button>
-            </form>
             
         </div>
 
-
-        
-        <div class="row">
-            
-            <div id="map"></div>
-        </div>
     </div>
 
 {% endblock content %}
@@ -59,13 +50,13 @@
 {% block javascript %}
 
 
-    <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
-    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    {% comment %} <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script> {% endcomment %}
+    {% comment %} <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script> {% endcomment %}
+    {% comment %} <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script> {% endcomment %}
     
 
 
-    <script src="{% static 'js/cliente/crear_mensajeria.js' %}"></script>
+    {% comment %} <script src="{% static 'js/cliente/crear_mensajeria.js' %}"></script> {% endcomment %}
 
 
 
